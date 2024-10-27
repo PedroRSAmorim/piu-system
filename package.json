@@ -4,9 +4,8 @@
   "description": "A system to facilitate stock control",
   "main": "main.js",
   "scripts": {
-    "config": "",
     "start": "node main.js",
-    "dev": "nodemon main.js"
+    "dev": "set NODE_ENV=development && nodemon main.js"
   },
   "repository": {
     "type": "git",

@@ -9,7 +9,7 @@ exports.createProduct = (req, res) => {
 };
   
 exports.updateProduct = (req, res) => {
-    const { id } = req.params;
+    const id = req.query.id;
     productService.update(id, req, res);
 };
 

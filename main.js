@@ -1,4 +1,5 @@
 const localServer = require('./localServer');
+const config = require('./src/Config');
 require('dotenv').config();
 
 try {
@@ -6,5 +7,6 @@ try {
   localServer.start();
 }
 catch(err) {
+  // console.log(err)
   localServer.stop();
 }
