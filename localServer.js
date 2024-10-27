@@ -9,6 +9,7 @@ const port = 1337;
 let localServer = {
   _server: null,
   init: function () {
+    
     try {
       app.use(express.json());
       app.use(express.urlencoded({ extended: true }));
