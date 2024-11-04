@@ -83,7 +83,7 @@ class PRODUCTS {
     
             productsList[itemIndex] = { ...productsList[itemIndex], ...data };
 
-            historyService.update(itemHistory, productsList[itemIndex], date);
+            await historyService.update(itemHistory, productsList[itemIndex], date);
     
             await fs.writeFile(productsListPath, JSON.stringify(productsList, null, 2));
             
@@ -108,7 +108,7 @@ class PRODUCTS {
     
             const removedItem = productsList.splice(itemIndex, 1)[0];
     
-            historyService.remove(removedItem, date);
+            await historyService.remove(removedItem, date);
     
             await fs.writeFile(productsListPath, JSON.stringify(productsList, null, 2));
     
