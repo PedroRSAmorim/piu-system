@@ -1,4 +1,5 @@
 const productService = require('../src/api/productService');
+const historyService = require('../src/api/historyService');
 
 exports.getProducts = (req, res) => {
     productService.get(req, res);
@@ -13,9 +14,14 @@ exports.updateProduct = (req, res) => {
     productService.update(id, req, res);
 };
 
-// exports.history = (req, res) => {
+exports.removeProduct = (req, res) => {
+    const id = req.query.id;
+    productService.remove(id, req, res);
+};
 
-// };
+exports.getHistory = (req, res) => {
+    historyService.get(req, res);
+};
 
 // Maybe we need .env later ???
 // exports.getenv = (req, res, next) => {

@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
+const historyService = require('./historyService');
 
 const productsListPath = path.join('C:', 'ProgramData', 'Piu-System', 'global', 'productsList.json');
 
@@ -50,6 +51,7 @@ class PRODUCTS {
         };
     
         try {
+            await historyService.create(newItem, date);
             const fileData = await fs.readFile(productsListPath, 'utf-8');
             const productsList = JSON.parse(fileData);
     
@@ -70,14 +72,18 @@ class PRODUCTS {
         try {
             const fileData = await fs.readFile(productsListPath, 'utf-8');
             const productsList = JSON.parse(fileData);
+            const date = new Date();
     
             const itemIndex = productsList.findIndex(item => item.id === id);
+            const itemHistory = productsList[itemIndex]
     
             if (itemIndex === -1) {
                 return res.status(404).json({ message: 'Item not found' });
             }
     
             productsList[itemIndex] = { ...productsList[itemIndex], ...data };
+
+            historyService.update(itemHistory, productsList[itemIndex], date);
     
             await fs.writeFile(productsListPath, JSON.stringify(productsList, null, 2));
             
@@ -85,8 +91,33 @@ class PRODUCTS {
         } catch (error) {
             console.error('Error updating the item:', error);
             res.status(500).json({ message: 'Error updating the item' });
+        };
+    };
+
+    async removeItem(id, req, res) {
+        try {
+            const fileData = await fs.readFile(productsListPath, 'utf-8');
+            const productsList = JSON.parse(fileData);
+            const date = new Date();
+    
+            const itemIndex = productsList.findIndex(item => item.id === id);
+    
+            if (itemIndex === -1) {
+                return res.status(404).json({ message: 'Item not found' });
+            }
+    
+            const removedItem = productsList.splice(itemIndex, 1)[0];
+    
+            historyService.remove(removedItem, date);
+    
+            await fs.writeFile(productsListPath, JSON.stringify(productsList, null, 2));
+    
+            res.status(200).json({ message: 'Item removed successfully', removedItem });
+        } catch (error) {
+            console.error('Error removing the item:', error);
+            res.status(500).json({ message: 'Error removing the item' });
         }
-    }
+    };
 };
 
 const Products = new PRODUCTS();
@@ -101,4 +132,8 @@ exports.create = async function (req, res) {
 
 exports.update = async function (id, req, res) {
     Products.updateItem(id, req, res);
+};
+
+exports.remove = async function (id, req, res) {
+    Products.removeItem(id, req, res);
 };
